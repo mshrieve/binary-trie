@@ -1,0 +1,25 @@
+# vscode
+.vscode
+
+.ipynb_checkpoints
+__pycache__
+.next
+
+# hardhat
+artifacts
+cache
+deployments
+
+node_modules
+
+# don't push the environment vars!
+.env
+.env.copy
+.env.local
+.wallet
+
+.DS*
+
+# Log Files
+*.log
+
