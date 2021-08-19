@@ -17,7 +17,7 @@ contract Trie2 {
 
     constructor() {}
 
-    function set(uint256 _m, uint256 _level) internal {
+    function mark(uint256 _m, uint256 _level) internal {
         //   (x => x | _leaf) sets the _leaf bit to 1
         // bytes32 key = getKey(_m >> 1, _level + 1);
         // bytes32 leaf = _m % 2 > 0 ? R : L;
@@ -54,17 +54,17 @@ contract Trie2 {
         mark(_m, 0);
     }
 
-    function mark(uint256 _m, uint256 _level) internal {
-        set(_m, _level);
-        if (check(_m ^ 1, _level))
-            // if the other leaf is available, done
-            return;
-        // no leaves are available
-        // if we are at the top of the tree
-        if (_level == depth) return;
-        //  otherwise, mark the parent edge
-        mark(_m >> 1, _level + 1);
-    }
+    // function mark(uint256 _m, uint256 _level) internal {
+    //     set(_m, _level);
+    //     if (check(_m ^ 1, _level))
+    //         // if the other leaf is available, done
+    //         return;
+    //     // no leaves are available
+    //     // if we are at the top of the tree
+    //     if (_level == depth) return;
+    //     //  otherwise, mark the parent edge
+    //     mark(_m >> 1, _level + 1);
+    // }
 
     // descend recursively back to 0
     // descend TO _m, _level
@@ -74,11 +74,16 @@ contract Trie2 {
         internal
         returns (uint256, bool)
     {
-        if (_level == 0) return (_m, true);
+        // if we made it to the bottom, return true
+        if (_level == 0) {
+            mark(_m, _level);
+            return (_m, true);
+        }
         // descend a level
         uint256 level = _level - 1;
         // add one bit
         uint256 m = _m << 1;
+        // get random bit from the seed
         uint256 seed_ = seed >> _level;
         // {a,b} = {0,1}
         uint256 a = seed_ % 2;
@@ -86,13 +91,15 @@ contract Trie2 {
 
         if (check(m + a, level)) {
             (uint256 result, bool marked) = descend(m + a, level);
+            // return false if not marked, or should not be marked
             if (!marked || check(m + b, level)) return (result, false);
-            set(_m, _level);
+            mark(_m, _level);
+            // return true if marked
             return (result, true);
         } else {
             (uint256 result, bool marked) = descend(m + b, level);
             if (!marked) return (result, false);
-            set(_m, _level);
+            mark(_m, _level);
             return (result, true);
         }
     }

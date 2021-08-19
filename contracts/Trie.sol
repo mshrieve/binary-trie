@@ -14,15 +14,11 @@ contract Trie {
     constructor() {}
 
     function set(uint256 _m, uint256 _level) internal {
-        //   (x => x | _leaf) sets the _leaf bit to 1
-        // bytes32 key = getKey(_m >> 1, _level + 1);
-        // bytes32 leaf = _m % 2 > 0 ? R : L;
         trie[getKey(_m, _level)] = true;
     }
 
     // check if available
     function check(uint256 _m, uint256 _level) internal view returns (bool) {
-        //   (x => (x & _leaf) != 0 ) evaluates to true if the _leaf bit is NOT set
         return !trie[getKey(_m, _level)];
     }
 

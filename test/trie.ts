@@ -22,7 +22,7 @@ describe('Trie', function () {
   })
 
   it('should complete round', async function () {
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 32; i++) {
       let transaction = await Trie.find(30)
       let receipt = await transaction.wait()
     }
@@ -34,8 +34,5 @@ describe('Trie', function () {
       console.log(iface.parseLog(log).args.m.toString())
     }
     expect(true).to.be.true
-
-    const found30 = await Trie.counter(30)
-    console.log(found30.toString())
   })
 })
